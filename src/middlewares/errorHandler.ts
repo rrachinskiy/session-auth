@@ -11,6 +11,7 @@ export const errorHandler = (
   res.json({
     error: {
       message: error.message,
+      field: error?.field,
     },
   });
 };

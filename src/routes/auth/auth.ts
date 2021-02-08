@@ -1,9 +1,9 @@
 import { Router } from 'express';
+import { auth } from '../../controllers/auth';
 
 const authRouter = Router();
 
-authRouter.get('/auth', (_, res) => {
-  res.send('Auth');
-});
+// @ts-ignore
+authRouter.post('/auth', auth);
 
 export default authRouter;
