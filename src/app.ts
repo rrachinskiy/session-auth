@@ -3,8 +3,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
 import { PORT, __prod__ } from './constants';
-import { errorHandler } from './middlewares/errorHandler';
-import { notFoundException } from './middlewares/notFoundException';
+import { errorHandler, notFoundException } from './middlewares';
 import { authRouter, registerRouter } from './routes/auth';
 
 const main = async () => {
@@ -24,6 +23,7 @@ const main = async () => {
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useCreateIndex: true,
     },
   );
 
