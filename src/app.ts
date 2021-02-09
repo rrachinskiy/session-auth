@@ -1,19 +1,38 @@
 import bodyparser from 'body-parser';
 import connectRedis from 'connect-redis';
+import cors from 'cors';
 import express from 'express';
 import session from 'express-session';
 import Redis from 'ioredis';
-import mongoose from 'mongoose';
 import morgan from 'morgan';
+import { createConnection } from 'typeorm';
 import { COOKIE_NAME, PORT, __prod__ } from './constants';
+import { User } from './entities/User';
 import { errorHandler, notFoundException } from './middlewares';
-import { authRouter, registerRouter } from './routes/auth';
+import { authRouter, registerRouter, meRouter } from './routes/auth';
 
 const main = async () => {
   // Load env variables from .env if not production
   !__prod__ && (await import('dotenv')).config();
 
+  await createConnection({
+    type: 'postgres',
+    database: process.env.PSQL_DB,
+    username: process.env.PSQL_USER,
+    password: process.env.PSQL_PASSWORD,
+    logging: !__prod__,
+    synchronize: true,
+    entities: [User],
+  });
+
   const app = express();
+
+  app.use(
+    cors({
+      origin: process.env.CORS_ORIGIN,
+      credentials: true,
+    }),
+  );
 
   const RedisStore = connectRedis(session);
   const redis = new Redis();
@@ -42,18 +61,9 @@ const main = async () => {
 
   app.use(authRouter);
   app.use(registerRouter);
-
-  mongoose.connect(
-    __prod__ ? `production mongodb link` : `mongodb://localhost:27017/${process.env.DB_NAME}`,
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-    },
-  );
+  app.use(meRouter);
 
   app.use(notFoundException);
-
   app.use(errorHandler);
 
   app.listen(PORT, () => {

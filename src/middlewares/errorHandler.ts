@@ -9,9 +9,11 @@ export const errorHandler = (
 ): void => {
   res.status(error.status || 500);
   res.json({
-    error: {
-      message: error.message,
-      field: error?.field,
-    },
+    errors: [
+      {
+        message: error.message,
+        field: error?.field,
+      },
+    ],
   });
 };

@@ -1,7 +1,7 @@
 import argon2 from 'argon2';
 import { NextFunction, Request, Response } from 'express';
 import { HttpError } from '../types';
-import User from '../models/User';
+import { User } from '../entities/User';
 
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
   const credentials = {
@@ -10,7 +10,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
   };
 
   try {
-    const existingUser: any = await User.findOne({ username: credentials.username });
+    const existingUser = await User.findOne({ where: { username: credentials.username } });
     if (!existingUser) {
       const error: HttpError = new Error('User does not exist');
       error.status = 400;
@@ -26,7 +26,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
       throw error;
     }
 
-    req.session.username = existingUser.username;
+    req.session.userId = existingUser.id;
     res.json({
       success: true,
       username: existingUser.username,
