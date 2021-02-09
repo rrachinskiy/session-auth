@@ -1,13 +1,13 @@
 import bodyparser from 'body-parser';
+import connectRedis from 'connect-redis';
 import express from 'express';
+import session from 'express-session';
+import Redis from 'ioredis';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
 import { COOKIE_NAME, PORT, __prod__ } from './constants';
 import { errorHandler, notFoundException } from './middlewares';
 import { authRouter, registerRouter } from './routes/auth';
-import Redis from 'ioredis';
-import session from 'express-session';
-import connectRedis from 'connect-redis';
 
 const main = async () => {
   // Load env variables from .env if not production

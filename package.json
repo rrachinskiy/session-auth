@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/app.js",
-    "dev": "nodemon dist/app.js",
-    "watch": "tsc --watch"
+    "dev": "yarn clearDist & nodemon dist/app.js",
+    "watch": "tsc --watch",
+    "build": "yarn clearDist & tsc",
+    "clearDist": "node tools/clearDistFolder"
   },
   "repository": "git+https://github.com/rrachinskiy/session-auth.git",
   "author": "Rostislav Rachinskiy",
