@@ -1,7 +1,5 @@
 import argon2 from 'argon2';
 import { NextFunction, Request, Response } from 'express';
-import { HttpError } from 'src/types';
-// import User from '../models/User';
 import { User } from '../entities/User';
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
@@ -23,7 +21,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     });
   } catch (err) {
     if (err.code === '23505') {
-      const duplUsernameError: HttpError = new Error('This username is already taken');
+      const duplUsernameError = new Error('This username is already taken');
       duplUsernameError.status = 400;
       duplUsernameError.field = 'username';
       next(duplUsernameError);

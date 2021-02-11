@@ -1,12 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { User } from '../entities/User';
-import { HttpError } from '../types';
 
 export const me = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.session.userId;
     if (!userId) {
-      const error: HttpError = new Error('Unathorized');
+      const error = new Error('Unathorized');
       error.status = 401;
       throw error;
     }

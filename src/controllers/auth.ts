@@ -1,6 +1,5 @@
 import argon2 from 'argon2';
 import { NextFunction, Request, Response } from 'express';
-import { HttpError } from '../types';
 import { User } from '../entities/User';
 
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
@@ -12,7 +11,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const existingUser = await User.findOne({ where: { username: credentials.username } });
     if (!existingUser) {
-      const error: HttpError = new Error('User does not exist');
+      const error = new Error('User does not exist');
       error.status = 400;
       error.field = 'username';
       throw error;
@@ -20,7 +19,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
 
     const validPassword = await argon2.verify(existingUser.password, credentials.password);
     if (!validPassword) {
-      const error: HttpError = new Error('Password is not correct');
+      const error = new Error('Password is not correct');
       error.status = 400;
       error.field = 'password';
       throw error;

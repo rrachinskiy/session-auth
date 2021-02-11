@@ -1,6 +1,6 @@
 type Field = 'username' | 'password';
 
-export interface HttpError extends Error {
+interface Error {
   status?: number;
   field?: Field;
 }
